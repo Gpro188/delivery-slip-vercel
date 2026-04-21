@@ -3,6 +3,8 @@ import { db } from '@/lib/db';
 import { institutions } from '@/lib/db/schema';
 import * as XLSX from 'xlsx';
 
+export const dynamic = 'force-dynamic';
+
 // GET - Export institutions to CSV or Excel
 export async function GET(req: NextRequest) {
   try {

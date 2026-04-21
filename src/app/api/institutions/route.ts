@@ -3,6 +3,8 @@ import { db } from '@/lib/db';
 import { institutions } from '@/lib/db/schema';
 import { eq, inArray, like, or } from 'drizzle-orm';
 
+export const dynamic = 'force-dynamic';
+
 // GET - Fetch all institutions or by IDs
 export async function GET(req: NextRequest) {
   try {

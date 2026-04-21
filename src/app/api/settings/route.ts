@@ -3,6 +3,8 @@ import { db } from '@/lib/db';
 import { fromSettings } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 
+export const dynamic = 'force-dynamic';
+
 // GET - Fetch settings
 export async function GET(req: NextRequest) {
   try {
