@@ -1,8 +1,8 @@
-import { redirect } from 'next/navigation';
+'use client';
+
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { db } from '@/lib/db';
-import { institutions, fromSettings } from '@/lib/db/schema';
-import { count } from 'drizzle-orm';
+import { signOut } from 'next-auth/react';
 import {
   Building2,
   Settings,
@@ -12,14 +12,32 @@ import {
   Trash2,
   Plus,
   List,
+  LogOut,
 } from 'lucide-react';
 
-export const dynamic = 'force-dynamic';
+export default function DashboardPage() {
+  const [institutionCount, setInstitutionCount] = useState(0);
+  const [settingsConfigured, setSettingsConfigured] = useState(false);
 
-export default async function DashboardPage() {
-  // Get statistics
-  const [institutionCount] = await db.select({ count: count() }).from(institutions);
-  const [settingsCount] = await db.select({ count: count() }).from(fromSettings);
+  useEffect(() => {
+    // Fetch institution count
+    fetch('/api/institutions')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setInstitutionCount(data.length);
+        }
+      });
+
+    // Fetch settings
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data && Object.keys(data).length > 0) {
+          setSettingsConfigured(true);
+        }
+      });
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -30,6 +48,13 @@ export default async function DashboardPage() {
             <h1 className="text-2xl font-bold text-gray-900">
               Delivery Slip Generator
             </h1>
+            <button
+              onClick={() => signOut({ callbackUrl: '/login' })}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
+              Sign Out
+            </button>
           </div>
         </div>
       </header>
@@ -53,7 +78,7 @@ export default async function DashboardPage() {
               <div>
                 <p className="text-sm text-gray-600 mb-1">Total Institutions</p>
                 <p className="text-3xl font-bold text-gray-900">
-                  {institutionCount.count}
+                  {institutionCount}
                 </p>
               </div>
               <Building2 className="w-12 h-12 text-blue-600" />
@@ -65,7 +90,7 @@ export default async function DashboardPage() {
               <div>
                 <p className="text-sm text-gray-600 mb-1">Settings Configured</p>
                 <p className="text-3xl font-bold text-gray-900">
-                  {settingsCount.count > 0 ? 'Yes' : 'No'}
+                  {settingsConfigured ? 'Yes' : 'No'}
                 </p>
               </div>
               <Settings className="w-12 h-12 text-green-600" />

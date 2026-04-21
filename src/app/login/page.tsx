@@ -99,7 +99,7 @@ export default function LoginPage() {
         </form>
 
         <div className="text-center text-sm text-gray-600">
-          <p>Default: admin / password</p>
+          <p>Default: admin / admin123</p>
         </div>
       </div>
     </div>

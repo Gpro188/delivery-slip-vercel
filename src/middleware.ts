@@ -1,10 +1,6 @@
+export { default } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-
-export function middleware(req: NextRequest) {
-  // Allow all requests without authentication
-  return NextResponse.next();
-}
 
 export const config = {
   matcher: ['/dashboard/:path*', '/institutions/:path*', '/settings/:path*', '/slips/:path*'],
